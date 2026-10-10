@@ -247,16 +247,21 @@ Escribe una consulta para obtener el nombre, apellido1 y fechaNac de los emplead
 
 Solución:
 ```sql
-
+select 
+  nombre, 
+  apellido1,
+  fechaNac
+from empleado
+where fechaNac between '1955-01-01' and '1965-12-31';
 ```
 
 Tabla resultado:
 
-| nombre   | apellido1 | fechaNac   |
-| -------- | --------- | ---------- |
-| José     | Pérez     | 1965-09-01 |
-| Alberto  | Campos    | 1955-12-08 | 
-| Fernando | Ojeda     | 1962-09-15 |
+| nombre   | apellido1 | fechaNac   |     |
+| -------- | --------- | ---------- | --- |
+| José     | Pérez     | 1965-09-01 |     |
+| Alberto  | Campos    | 1955-12-08 |     |
+| Fernando | Ojeda     | 1962-09-15 |     |
 
 ---
 
@@ -524,14 +529,23 @@ Escribe una consulta que devuelva los empleados con más de un familiar que no s
 
 Solución:
 ```sql
+SELECT empleado
+FROM FAMILIAR
+GROUP BY empleado
+HAVING COUNT(*) > 1
 
+EXCEPT
+
+SELECT supervisor
+FROM EMPLEADO
+WHERE supervisor IS NOT NULL;
 ```
 
 Tabla resultado:
 
-| empleado  | 
-| --------- |
-| 123456789 |
+| empleado  |     |
+| --------- | --- |
+| 123456789 |     |
 
 ---
 
@@ -654,7 +668,21 @@ Escribe una consulta que devuelva el dni de los empleados que no tienen familiar
 
 Solución:
 ```sql
+-- 1. Empleados que no tienen familiares
+SELECT dni
+FROM EMPLEADO
+EXCEPT
+SELECT empleado
+FROM FAMILIAR
 
+UNION
+
+-- 2. Supervisores con más de 2 empleados a su cargo
+SELECT supervisor
+FROM EMPLEADO
+WHERE supervisor IS NOT NULL
+GROUP BY supervisor
+HAVING COUNT(*) > 2;
 
 ```
 
@@ -775,7 +803,18 @@ Escribe una consulta que devuelva los proyectos del departamento con mayor núme
 
 Solución:
 ```sql
-
+WITH DptoMaxEmpleados AS (
+    -- Contamos los empleados por departamento y nos quedamos con el que tiene más
+    SELECT dpto
+    FROM EMPLEADO
+    GROUP BY dpto
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+)
+-- Seleccionamos los datos del proyecto filtrando por el departamento obtenido en la CTE
+SELECT nombre, ubicacion, dpto
+FROM PROYECTO
+WHERE dpto = (SELECT dpto FROM DptoMaxEmpleados);
 ```
 
 Tabla resultado:
