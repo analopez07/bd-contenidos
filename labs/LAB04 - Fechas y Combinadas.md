@@ -804,14 +804,13 @@ Escribe una consulta que devuelva los proyectos del departamento con mayor núme
 Solución:
 ```sql
 WITH DptoMaxEmpleados AS (
-    -- Contamos los empleados por departamento y nos quedamos con el que tiene más
     SELECT dpto
     FROM EMPLEADO
     GROUP BY dpto
     ORDER BY COUNT(*) DESC
     LIMIT 1
 )
--- Seleccionamos los datos del proyecto filtrando por el departamento obtenido en la CTE
+
 SELECT nombre, ubicacion, dpto
 FROM PROYECTO
 WHERE dpto = (SELECT dpto FROM DptoMaxEmpleados);
