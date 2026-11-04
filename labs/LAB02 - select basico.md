@@ -23,7 +23,7 @@ Solución:
 ```sql
 select
     Upper(genero) || " " || Lower(pais) as que_donde,
-    Round((megusta*100.0) / reproducciones ,1) as porcentaje_me_gusta
+    Round((me_gusta*100.0) / reproducciones ,1) as porcentaje_me_gusta
 from cancion
 Where NOT idioma = "ES"
 order by porcentaje_me_gusta desc
@@ -176,12 +176,10 @@ Solución:
 select
 	titulo,
 	pais,
-	idioma,
 	duracion,
 	case
 		when pais = "Reino Unido" then Round((duracion + 30.0)/60.0 ,2)
 		when pais = "España" then Round((duracion + 45.0)/60.0 ,2)
-		else 'duracion desconocida'
 	end as duracion_radio_min
 from cancion
 order by duracion desc
@@ -700,7 +698,7 @@ Solución:
 select
 avg(reproducciones)
 from cancion
-where reproducciones > 1000000
+where reproducciones > 1000000;
 ```
 
 Resultado:

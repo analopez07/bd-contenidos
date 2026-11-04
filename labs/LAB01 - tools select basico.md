@@ -267,7 +267,7 @@ Solución:
 select
     titulo,
     reproducciones
-from canciones_muestra
+from cancion_muestra
 order by reproducciones desc;
 ```
 
